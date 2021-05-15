@@ -9,7 +9,6 @@ happens to be the knapsack problem. The burglar
 algorith needs to be implemented!
 
 """
-items_copy
 # creating a class Item for every Item in the house
 class Item(object):
     # passing the parameters and storing them into the class
@@ -119,3 +118,26 @@ def Main(max_weight =10):
 
 
 Main(max_weight = 20)
+def chooseBest(pset, maxWeight, getVal, getWeight):
+    bestVal = 0.0
+    bestSet = None
+    for items in pset:
+        itemsVal = 0.0
+        itemsWeight = 0.0
+        for item in items:
+            itemsVal += getVal(item)
+            itemsWeight += getWeight(item)
+                
+        if itemsWeight <= maxWeight and itemsVal > bestVal:
+            bestVal = itemsVal
+            bestSet = items
+        return (bestSet, bestVal)
+
+def testBest(maxWeight = 20):
+    items = build_items()
+    pset = genPowerset(items)
+    taken, val = chooseBest(pset, maxWeight, Item.getValue,
+    Item.getWeight)
+    print('Total value of items taken is', val)
+    for item in taken:
+        (item)
