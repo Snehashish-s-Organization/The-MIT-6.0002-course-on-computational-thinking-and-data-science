@@ -1,3 +1,5 @@
+import random
+
 """
 Implementing the Decision tree
 
@@ -116,28 +118,78 @@ def Main(max_weight =10):
     print("Use greedy by density to fill knapsack of size", max_weight)
     test_greedy(items, max_weight, density)
 
+def maxVal(toConsider, avail):
+    if toConsider == [] or avail == 0:
+        result = (0, ())
+    elif toConsider[0].getWeight() > avail:
+        # Explore right branch only
+        result = maxVal(toConsider[1:], avail)
+    else:
+        nextItem = toConsider[0]
+        # Explore left branch
+        withVal, withToTake = maxVal(toConsider[1:], avail - nextItem.getWeight())
+        withVal += nextItem.getValue()
+        # Explore right branch
+        withoutVal, withoutToTake = maxVal(toConsider[1:], avail)
+        # Explore better branch
+        if withVal > withoutVal:
+            result = (withVal, withToTake + (nextItem,))
+        else:
+            result = (withoutVal, withoutToTake)
+    return result
 
-Main(max_weight = 20)
-def chooseBest(pset, maxWeight, getVal, getWeight):
-    bestVal = 0.0
-    bestSet = None
-    for items in pset:
-        itemsVal = 0.0
-        itemsWeight = 0.0
-        for item in items:
-            itemsVal += getVal(item)
-            itemsWeight += getWeight(item)
-                
-        if itemsWeight <= maxWeight and itemsVal > bestVal:
-            bestVal = itemsVal
-            bestSet = items
-        return (bestSet, bestVal)
+def fastMaxVal(toConsider, avail, memo = {}):
+    """Assumes toConsider a list of subjects, avail a weight
+         memo supplied by recursive calls
+       Returns a tuple of the total value of a solution to the
+         0/1 knapsack problem and the subjects of that solution"""
+    if (len(toConsider), avail) in memo:
+        result = memo[(len(toConsider), avail)]
+    elif toConsider == [] or avail == 0:
+        result = (0, ())
+    elif toConsider[0].getWeight() > avail:
+        #Explore right branch only
+        result = fastMaxVal(toConsider[1:], avail, memo)
+    else:
+        nextItem = toConsider[0]
+        #Explore left branch
+        withVal, withToTake =\
+                 fastMaxVal(toConsider[1:],
+                            avail - nextItem.getWeight(), memo)
+        withVal += nextItem.getValue()
+        #Explore right branch
+        withoutVal, withoutToTake = fastMaxVal(toConsider[1:],
+                                                avail, memo)
+        #Choose better branch
+        if withVal > withoutVal:
+            result = (withVal, withToTake + (nextItem,))
+        else:
+            result = (withoutVal, withoutToTake)
+    memo[(len(toConsider), avail)] = result
+    return result
 
-def testBest(maxWeight = 20):
-    items = build_items()
-    pset = genPowerset(items)
-    taken, val = chooseBest(pset, maxWeight, Item.getValue,
-    Item.getWeight)
-    print('Total value of items taken is', val)
-    for item in taken:
-        (item)
+def testMaxVal(foods, maxUnits, algorithm, printItems = True):
+    print('Menu contains', len(foods), 'items')
+    print('Use search tree to allocate', maxUnits,
+          'calories')
+    val, taken = algorithm(foods, maxUnits)
+    if printItems:
+        print('Total value of items taken =', val)
+        for item in taken:
+            print('   ', item)
+def buildLargeMenu(numItems, maxVal, maxCost):
+    items = []
+    for i in range(numItems):
+        items.append(Item(str(i),
+                          random.randint(1, maxVal),
+                          random.randint(1, maxCost)))
+    return items
+for numItems in (2, 4, 8, 16, 32, 64, 128, 256, 512, 1024):
+    numCalls = 0
+    items = buildLargeMenu(numItems, 90, 250)
+    testMaxVal(items, 20, fastMaxVal)
+    print('Number of calls =', numCalls)
+
+
+
+
