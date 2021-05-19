@@ -60,7 +60,7 @@ class Diagraph:
         for n in self.edges:
             if n.getName() == node:
                 return n
-        raise NameError(name)
+        raise NameError('name')
     
     def __str__(self):
         result = ''
@@ -71,9 +71,9 @@ class Diagraph:
     
 class Graph(Diagraph):
     def addEdge(self, edge):
-        Digraph.addEdge(self, edge)
+        Diagraph.addEdge(self, edge)
         rev = Edge(edge.getDestination(), edge.getSource())
-        Digraph.addEdge(self, rev)
+        Diagraph.addEdge(self, rev)
 
 def buildCityGraph(graphType):
     g = graphType()
