@@ -56,18 +56,6 @@ for spin in (10):
         print(pocket_to_gamble)
         play(game, spin, pocket_to_gamble, 1)
 
-
-# def playRoulette(game, numSpins, pocket, bet, toPrint):
-#     totPocket = 0
-#     for i in range(numSpins):
-#         game.spin()
-#         totPocket += game.betPocket(pocket, bet)
-#     if toPrint:
-#         print(numSpins, 'spins of', game)
-#         print('Expected return betting', pocket, '=',\
-#               str(100*totPocket/numSpins) + '%\n')
-#     return (totPocket/numSpins)
-
 class EuRoulette(rouletteSim):
     def __init__(self):
         rouletteSim.__init__(self)
