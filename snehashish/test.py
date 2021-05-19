@@ -1,16 +1,9 @@
-# implements the idea of fibonachi numbers
+from matplotlib import pylab
 
-def fastFib(number, memo = {}):
+list_ = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+list_2 = [1, 3, 3, 5, 5, 7,7, 8, 8, 10]
 
-    if number == 0 or number == 1:
-        return 1
 
-    try:
-        result = memo[number]
-    except:
-        result = fastFib(number-1) + fastFib(number-2)
-        memo[number] = result
-    
-    return result
-
-print(fastFib(121))
+pylab.plot(list_)
+pylab.plot(list_)
+pylab.show()
